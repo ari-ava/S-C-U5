@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "title": "Taller: Escritura creativa",
+    "category": "Talleres",
+    "price": 0,
+    "description": "Sesión de 4 horas para aprender técnicas de escritura y narración creativa.",
+    "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80"
+  },
+  {
+    "id": 2,
+    "title": "Guía de estudio: Matemáticas básicas",
+    "category": "Recursos",
+    "price": 0,
+    "description": "PDF descargable con ejercicios y soluciones paso a paso.",
+    "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80"
+  },
+  {
+    "id": 3,
+    "title": "Mentoría 1:1",
+    "category": "Mentoría",
+    "price": 15,
+    "description": "Sesión personalizada de 60 minutos con un tutor experto.",
+    "image": "https://images.unsplash.com/photo-1554774853-9b0b5a7ddc2a?w=800&q=80"
+  },
+  {
+    "id": 4,
+    "title": "Workshop: Diseño de maquetas",
+    "category": "Talleres",
+    "price": 5,
+    "description": "Prácticas y tips para planificar y construir maquetas efectivas.",
+    "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80"
+  }
+]

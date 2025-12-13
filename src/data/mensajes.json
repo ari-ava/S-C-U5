@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "nombre": "Ana López",
+    "email": "ana.lopez@example.com",
+    "mensaje": "Hola, me encanta su proyecto. ¿Tienen talleres virtuales?",
+    "fecha": "2025-10-15T15:30:00Z"
+  },
+  {
+    "id": 2,
+    "nombre": "Carlos Méndez",
+    "email": "carlos.mendez@example.com",
+    "mensaje": "¿Dónde puedo encontrar más información sobre las clases?",
+    "fecha": "2025-10-15T16:10:00Z"
+  }
+]
