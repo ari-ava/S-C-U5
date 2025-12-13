@@ -1,20 +1,26 @@
 [
   {
     "id": 1,
-    "nombre": "💬 Valeria Torres",
-    "texto": "El equipo fue súper profesional, amable y claro. Me ayudaron a avanzar más de lo que imaginaba.",
-    "imagen": "/public/assets/img/persona1.png"
+    "nombre": "Ana López",
+    "texto": "El servicio fue excelente, muy rápido y confiable. Definitivamente volvería a contratar.",
+    "imagen": "/ana.jpg",
+    "rating": 5,
+    "tipo": "Profesores"
   },
   {
     "id": 2,
-    "nombre": "🌟 Carlos Méndez",
-    "texto": "Me sentí acompañado en todo momento. Su plataforma es de las más humanas que he visto.",
-    "imagen": "public//assets/img/persona2.png"
+    "nombre": "Carlos Pérez",
+    "texto": "La atención fue muy buena y resolvieron todas mis dudas. Muy recomendados.",
+    "imagen": "/carlos.jpg",
+    "rating": 4,
+    "tipo": "Estudiantes"
   },
   {
     "id": 3,
-    "nombre": "✨ Ana López",
-    "texto": "Una experiencia transformadora. Aprendí muchísimo y encontré motivación para seguir estudiando.",
-    "imagen": "public//assets/img/persona3.png"
+    "nombre": "Lucía Gómez",
+    "texto": "Me sentí acompañada en todo el proceso. Excelente experiencia.",
+    "imagen": "/lucia.jpg",
+    "rating": 5,
+    "tipo": "Estudiantes"
   }
 ]
