@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "nombre": "Sasha Manihuari",
+    "edad": 15,
+    "sueño": "Ser investigadora en educación y aportar a nuevas formas de aprendizaje.",
+    "personalidad": "Curiosa, analítica y muy reflexiva. Siempre buscando entender cómo aprenden las personas y cómo mejorar la educación.",
+    "visionFuturo": "Sueña con que Sembrando Conocimientos se convierta en una comunidad donde aprender sea accesible, humano y transformador.",
+    "frase": "La educación cambia vidas cuando aprende a escuchar a quienes la necesitan.",
+    "imagen": "/assets/img/sasha2.jpg"
+  },
+
+  {
+    "id": 2,
+    "nombre": "Akari Avalos",
+    "edad": 15,
+    "sueño": "Crear plataformas digitales educativas que inspiren y acompañen a estudiantes de todo el mundo.",
+    "personalidad": "Creativa, soñadora y determinada. Le encanta transformar ideas en experiencias digitales hermosas y accesibles.",
+    "visionFuturo": "Imagina Sembrando Conocimientos como una gran plataforma educativa, llena de herramientas gratuitas, cursos y espacios seguros para aprender.",
+    "frase": "La tecnología también puede ser un abrazo para quienes aprenden.",
+    "imagen": "/assets/img/ari.jpg"
+  },
+
+  {
+    "id": 3,
+    "nombre": "Yaiza",
+    "edad": 17,
+    "sueño": "Crear contenidos educativos interactivos que hagan aprender sintiéndose acompañado.",
+    "personalidad": "Empática, sensible y con una creatividad cálida. Busca siempre que todo lo educativo también se sienta cercano, bonito y entendible.",
+    "visionFuturo": "Sueña con que Sembrando Conocimientos sea un espacio lleno de recursos visuales, dinámicos y amigables para todos.",
+    "frase": "El conocimiento también se diseña para sentirse bonito y accesible.",
+    "imagen": "/assets/img/Yaiza2.jpg"
+  }
+]
