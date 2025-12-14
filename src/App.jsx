@@ -12,6 +12,7 @@ import Foro from "./pages/Foro";
 import Testimonios from "./pages/Testimonios";
 import Contactanos from "./pages/Contactanos";
 import Promociones from "./pages/Promociones";
+import pizarra from "./pages/pizarra";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
@@ -34,6 +35,7 @@ function App() {
           <Route path="/testimonios" element={<Testimonios />} />
           <Route path="/contactanos" element={<Contactanos />} />
           <Route path="/promociones" element={<Promociones />} />
+          <Route path="/pizarra" element={<Pizarra />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 

@@ -1,6 +1,7 @@
 import { React } from "react";
 import { motion } from "framer-motion";
 import { useState } from "react";
+<<<<<<< HEAD
 import confetti from "canvas-confetti";
 
 const cards = [
@@ -40,6 +41,32 @@ export default function SembrandoConocimientosPage() {
     setTimeout(() => setCelebrate(false), 2500);
   };
 
+=======
+import PromoCarousel from "../Components/PromoCarousel";
+
+export default function Promociones() {
+  <PromoCarousel />;
+  const [promos] = useState([
+    {
+      id: 1,
+      titulo: "🌱 Aprende desde casa",
+      descripcion: "Accede a nuestros cursos online con 30% de descuento por tiempo limitado.",
+      badge: "DESCUENTO",
+    },
+    {
+      id: 2,
+      titulo: "📚 Cursos gratuitos",
+      descripcion: "Inscríbete hoy y obtén acceso gratuito a cursos introductorios.",
+      badge: "GRATIS",
+    },
+    {
+      id: 3,
+      titulo: "🎓 Plan estudiante",
+      descripcion: "Precios especiales para estudiantes registrados.",
+      badge: "EXCLUSIVO",
+    },
+  ]);
+>>>>>>> da4937e90d36042b02f6b4a61429649c367095c7
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-orange-100/40 to-white px-6 py-14">
       

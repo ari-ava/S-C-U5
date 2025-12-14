@@ -8,8 +8,13 @@ import { doc, getDoc } from "firebase/firestore";
 import ProductForm from "../Components/ProductForm";
 import ProductList from "../Components/ProductList";
 import StatsPanel from "../Components/StatsPanel";
+import PromoCarousel from "../Components/PromoCarousel";
+
 
 const Dashboard = () => {
+  <>
+      <PromoCarousel />
+    </>
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
   const [activeTab, setActiveTab] = useState("products");
@@ -122,7 +127,6 @@ const Dashboard = () => {
   const cancelEditing = () => {
     setEditingProduct(null);
   };
-
   return (
     <div className="min-h-screen from-orange-50 to-blue-50 py-8 px-4">
       <div className="max-w-7xl mx-auto">
@@ -237,7 +241,9 @@ const Dashboard = () => {
           </motion.div>
         )}
       </div>
+      
     </div>
+    
   );
 };
 
