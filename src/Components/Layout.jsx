@@ -56,12 +56,20 @@ export default function Layout({ children }) {
       to: "/mis-cursos",
       label: "Mis cursos",
     },
+    usuario?.rol === "estudiante" && {
+      to: "/promociones",
+      label: "Promociones",
+    },
 
     // 👩‍🏫 Solo profesor
     usuario?.rol === "profesor" && {
       to: "/crear-curso",
       label: "Crear curso",
     },
+    usuario?.rol === "profesor" && {
+      to: "/promociones",
+      label: "Promociones",
+    }
   ].filter(Boolean);
 
   return (
