@@ -1,248 +1,231 @@
 import React, { useEffect, useState } from "react";
-import materiasData from "../data/materiales.json";
-import { db, auth } from "../firebase.js";
+import materias from "../data/materiales.json";
+import { db, auth } from "../firebase";
 import {
   collection,
   query,
-  where,
   orderBy,
   onSnapshot,
   addDoc,
   updateDoc,
   doc,
 } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 
-const Foro = () => {
-  const [mensajes, setMensajes] = useState([]);
-  const [materiaSeleccionada, setMateriaSeleccionada] = useState("");
-  const [mensajeTexto, setMensajeTexto] = useState("");
-  const [filtro, setFiltro] = useState("Todos");
+export default function Foro() {
+  const [usuario, setUsuario] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [texto, setTexto] = useState("");
+  const [materia, setMateria] = useState("");
 
-  const user = auth.currentUser;
-
-  // 🔹 Cargar mensajes desde Firestore en tiempo real
+  /* Usuario */
   useEffect(() => {
-    const q = query(collection(db, "foroposts"), orderBy("fecha", "desc"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-        respuestas: doc.data().respuestas || [],
-      }));
-      setMensajes(data);
-    });
-    return () => unsubscribe();
+    const unsub = onAuthStateChanged(auth, (u) => setUsuario(u));
+    return () => unsub();
   }, []);
 
-  // 🔹 Publicar mensaje
-  const publicarMensaje = async () => {
-    if (!mensajeTexto.trim() || !materiaSeleccionada) {
-      alert("Por favor escribe un mensaje y selecciona una materia.");
-      return;
-    }
+  /* Mensajes */
+  useEffect(() => {
+    const q = query(collection(db, "foroposts"), orderBy("fecha", "desc"));
+    const unsub = onSnapshot(q, (snap) => {
+      setPosts(
+        snap.docs.map((d) => ({
+          id: d.id,
+          ...d.data(),
+          respuestas: d.data().respuestas || [],
+        }))
+      );
+    });
+    return () => unsub();
+  }, []);
 
-    if (!user) {
-      alert("Debes iniciar sesión para publicar.");
-      return;
-    }
+  const publicar = async () => {
+    if (!usuario || !texto.trim() || !materia) return;
 
     await addDoc(collection(db, "foroposts"), {
-      autor: user.displayName || user.email,
-      autorId: user.uid,
-      rol: user.rol || "estudiante",
-      materia: materiaSeleccionada,
-      texto: mensajeTexto,
+      texto,
+      materia,
+      autor: usuario.displayName || usuario.email,
+      autorId: usuario.uid,
       fecha: new Date(),
       respuestas: [],
     });
 
-    setMensajeTexto("");
-    setMateriaSeleccionada("");
+    setTexto("");
+    setMateria("");
   };
 
-  // 🔹 Publicar respuesta
-  const enviarRespuesta = async (id, textoRespuesta) => {
-    if (!textoRespuesta.trim() || !user) return;
+  const responder = async (id, respuesta) => {
+    if (!usuario || !respuesta.trim()) return;
+    const ref = doc(db, "foroposts", id);
+    const actual = posts.find((p) => p.id === id);
 
-    const mensajeRef = doc(db, "foroposts", id);
-    await updateDoc(mensajeRef, {
+    await updateDoc(ref, {
       respuestas: [
-        ...mensajes.find((m) => m.id === id).respuestas,
+        ...actual.respuestas,
         {
-          autor: user.displayName || user.email,
-          autorId: user.uid,
-          rol: user.rol || "estudiante",
-          texto: textoRespuesta,
+          texto: respuesta,
+          autor: usuario.displayName || usuario.email,
           fecha: new Date(),
         },
       ],
     });
   };
 
-  // 🔹 Filtrado por materia
-  const mensajesFiltrados =
-    filtro === "Todos"
-      ? mensajes
-      : mensajes.filter((m) => m.materia === filtro);
-
   return (
+    <main className="min-h-screen bg-gradient-to-b from-orange-50 to-white p-6">
 
-      <main className="max-w-6xl mx-auto p-6 font-sans">
-        {/* Header */}
-        <section className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-orange-600 mb-4">
-            Bienvenido a nuestro Foro
-          </h1>
-          <p className="max-w-3xl mx-auto text-gray-700 leading-relaxed">
-            ¿Tienes dudas o quieres ayudar a alguien? Este foro es tu espacio
-            para compartir, aprender y crecer juntos.
-          </p>
+      {/* HEADER */}
+      <header className="max-w-5xl mx-auto text-center mb-16">
+        <h1 className="text-5xl font-extrabold text-orange-600 mb-4">
+          Foro Académico
+        </h1>
+        <p className="text-gray-600 max-w-2xl mx-auto">
+          Un espacio para aprender, preguntar y ayudar con respeto 🤍
+        </p>
+      </header>
 
-          <div className="grid sm:grid-cols-3 gap-4 mt-8">
-            <div className="bg-orange-100 p-6 rounded-xl shadow hover:bg-orange-200">
-              📘 Aprende
-            </div>
-            <div className="bg-orange-100 p-6 rounded-xl shadow hover:bg-orange-200">
-              💬 Participa
-            </div>
-            <div className="bg-orange-100 p-6 rounded-xl shadow hover:bg-orange-200">
-              🤝 Ayuda
-            </div>
-          </div>
-        </section>
+      {/* REGLAS */}
+      <section className="max-w-4xl mx-auto bg-orange-100/60 border border-orange-200 rounded-3xl p-6 mb-14">
+        <h2 className="font-bold text-orange-700 mb-3 text-lg">
+          📜 Reglas del foro
+        </h2>
+        <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+          <li>Sé respetuoso con todos los participantes</li>
+          <li>Mantén tus preguntas relacionadas a la materia</li>
+          <li>No spam, no insultos, no desinformación</li>
+          <li>Ayudar también es aprender ✨</li>
+        </ul>
+      </section>
 
-        {/* Filtro de materias */}
-        <section className="text-center mb-10">
-          <h2 className="text-2xl font-bold text-orange-600 mb-4">
-            ¡Elige una materia y empieza a interactuar!
-          </h2>
+      {/* NUEVO POST */}
+      <section className="max-w-4xl mx-auto bg-white rounded-3xl shadow-md p-6 mb-16">
+        <h3 className="text-xl font-bold text-orange-600 mb-4">
+          ✍️ Crear una pregunta
+        </h3>
 
-          <div className="flex flex-wrap justify-center gap-3 mb-6">
-            <button
-              className={`px-4 py-2 rounded-lg border ${
-                filtro === "Todos"
-                  ? "bg-orange-500 text-white"
-                  : "bg-white text-orange-600 border-orange-400"
-              }`}
-              onClick={() => setFiltro("Todos")}
-            >
-              Todos
-            </button>
+        <div className="flex flex-col gap-4">
+          <textarea
+            placeholder={
+              usuario
+                ? "Escribe tu duda o aporte aquí..."
+                : "Inicia sesión para participar"
+            }
+            disabled={!usuario}
+            value={texto}
+            onChange={(e) => setTexto(e.target.value)}
+            className="border rounded-2xl p-4 min-h-[100px] resize-none focus:outline-orange-400 disabled:bg-gray-100"
+          />
 
-            {materiasData.map((materia) => (
-              <button
-                key={materia}
-                className={`px-4 py-2 rounded-lg border ${
-                  filtro === materia
-                    ? "bg-orange-500 text-white"
-                    : "bg-white text-orange-600 border-orange-400"
-                }`}
-                onClick={() => setFiltro(materia)}
-              >
-                {materia}
-              </button>
-            ))}
-          </div>
-        </section>
-
-        {/* Input de nuevo mensaje */}
-        <section className="mb-10">
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
-            <input
-              type="text"
-              placeholder="Escribe tu mensaje aquí"
-              className="border p-2 rounded-lg flex-1"
-              value={mensajeTexto}
-              onChange={(e) => setMensajeTexto(e.target.value)}
-            />
+          <div className="flex flex-col sm:flex-row gap-3">
             <select
-              className="border p-2 rounded-lg"
-              value={materiaSeleccionada}
-              onChange={(e) => setMateriaSeleccionada(e.target.value)}
+              disabled={!usuario}
+              value={materia}
+              onChange={(e) => setMateria(e.target.value)}
+              className="border rounded-xl px-4 py-2 disabled:bg-gray-100"
             >
               <option value="">Selecciona materia</option>
-              {materiasData.map((materia) => (
-                <option key={materia} value={materia}>
-                  {materia}
+              {materias.map((m) => (
+                <option key={m} value={m}>
+                  {m}
                 </option>
               ))}
             </select>
+
             <button
-              className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition"
-              onClick={publicarMensaje}
+              onClick={publicar}
+              disabled={!usuario}
+              className="bg-orange-500 text-white px-6 py-2 rounded-xl hover:bg-orange-600 transition disabled:bg-gray-300"
             >
               Publicar
             </button>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Mensajes */}
-        <section className="space-y-6">
-          {mensajesFiltrados.map((m) => (
-            <MensajeCard
-              key={m.id}
-              mensaje={m}
-              enviarRespuesta={enviarRespuesta}
-            />
-          ))}
-        </section>
-      </main>
+      {/* POSTS */}
+      <section className="max-w-5xl mx-auto space-y-8">
+        {posts.length === 0 && (
+          <p className="text-center text-gray-500 italic">
+            Aún no hay publicaciones.
+          </p>
+        )}
 
+        {posts.map((p) => (
+          <PostCard
+            key={p.id}
+            post={p}
+            responder={responder}
+            usuario={usuario}
+          />
+        ))}
+      </section>
+    </main>
   );
-};
+}
 
-// Componente MensajeCard
-const MensajeCard = ({ mensaje, enviarRespuesta }) => {
-  const [mostrar, setMostrar] = useState(false);
+/* ---------------- COMPONENTES ---------------- */
+
+const PostCard = ({ post, responder, usuario }) => {
+  const [abierto, setAbierto] = useState(false);
   const [respuesta, setRespuesta] = useState("");
 
   return (
-    <div className="bg-white border border-orange-200 rounded-xl p-4 shadow">
-      <p className="font-semibold text-orange-700">
-        {mensaje.materia}: <span className="text-gray-800">{mensaje.texto}</span>
-      </p>
-      <p className="text-sm text-gray-500 mb-2">
-        {mensaje.autor} ({mensaje.rol})
+    <article className="bg-white rounded-3xl border border-orange-100 shadow-sm p-6 hover:shadow-md transition">
+      <span className="inline-block bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-1 rounded-full mb-3">
+        {post.materia}
+      </span>
+
+      <p className="text-gray-800 text-lg mb-2">{post.texto}</p>
+
+      <p className="text-sm text-gray-500 mb-4">
+        👤 {post.autor}
       </p>
 
-      {/* Responder */}
       <button
-        onClick={() => setMostrar(!mostrar)}
-        className="text-sm text-orange-600 font-semibold hover:underline"
+        onClick={() => setAbierto(!abierto)}
+        className="text-orange-600 font-semibold text-sm hover:underline"
       >
-        {mostrar ? "Ocultar respuestas" : "Responder"}
+        {abierto ? "Ocultar respuestas" : "Responder"}
       </button>
 
-      {mostrar && (
-        <div className="mt-3">
-          <input
-            type="text"
-            placeholder="Escribe una respuesta"
-            value={respuesta}
-            onChange={(e) => setRespuesta(e.target.value)}
-            className="border p-2 rounded-lg w-full mb-2"
-          />
-          <button
-            className="bg-orange-500 text-white px-3 py-1 rounded-lg hover:bg-orange-600"
-            onClick={() => {
-              enviarRespuesta(mensaje.id, respuesta);
-              setRespuesta("");
-            }}
-          >
-            Enviar
-          </button>
-
-          <div className="mt-2 space-y-1">
-            {mensaje.respuestas.map((r, i) => (
-              <p key={i} className="text-sm text-gray-700 ml-3">
-                👤 {r.autor} ({r.rol}): {r.texto}
-              </p>
-            ))}
+      {abierto && (
+        <div className="mt-5 space-y-4">
+          <div className="flex gap-2">
+            <input
+              value={respuesta}
+              onChange={(e) => setRespuesta(e.target.value)}
+              disabled={!usuario}
+              placeholder={
+                usuario
+                  ? "Escribe una respuesta..."
+                  : "Inicia sesión para responder"
+              }
+              className="flex-1 border rounded-xl px-4 py-2 text-sm disabled:bg-gray-100"
+            />
+            <button
+              onClick={() => {
+                responder(post.id, respuesta);
+                setRespuesta("");
+              }}
+              disabled={!usuario}
+              className="bg-orange-500 text-white px-4 py-2 rounded-xl text-sm hover:bg-orange-600 disabled:bg-gray-300"
+            >
+              Enviar
+            </button>
           </div>
+
+          {post.respuestas.map((r, i) => (
+            <div
+              key={i}
+              className="bg-orange-50 border border-orange-100 rounded-2xl p-4 text-sm"
+            >
+              <p className="text-gray-700">{r.texto}</p>
+              <p className="text-xs text-gray-500 mt-1">👤 {r.autor}</p>
+            </div>
+          ))}
         </div>
       )}
-    </div>
+    </article>
   );
 };
-
-export default Foro;
