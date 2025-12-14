@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import { auth, db } from "../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setDoc, doc } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import { setDoc, doc, serverTimestamp } from "firebase/firestore";
+import { useNavigate, Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
-const Register = () => {
+export default function Register() {
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
@@ -16,81 +19,138 @@ const Register = () => {
     setError("");
 
     if (!nombre || !email || !password) {
-      setError("Por favor completa todos los campos");
+      setError("Completa todos los campos 🌱");
       return;
     }
 
-    try {
-      // Crear usuario en Firebase Auth
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+    if (password.length < 6) {
+      setError("La contraseña debe tener al menos 6 caracteres");
+      return;
+    }
 
-      // Guardar usuario en Firestore
+    setLoading(true);
+
+    try {
+      const { user } = await createUserWithEmailAndPassword(auth, email, password);
+
       await setDoc(doc(db, "usuarios", user.uid), {
         nombre,
         email,
-        rol: "estudiante", // por defecto
+        rol: "estudiante",
         cursosAsignados: [],
-        fechaRegistro: new Date().toISOString(),
+        creadoEn: serverTimestamp(),
       });
 
-      alert("Usuario registrado correctamente!");
-      navigate("/login"); // redirige a login
+      navigate("/login");
     } catch (err) {
       console.error(err);
       if (err.code === "auth/email-already-in-use") {
         setError("Este correo ya está registrado");
       } else {
-        setError(err.message);
+        setError("Ocurrió un error al registrarse");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-orange-50">
-      <form
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-100 via-orange-50 to-white px-6">
+
+      <motion.form
         onSubmit={handleRegister}
-        className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white/80 backdrop-blur-lg border border-orange-200 shadow-xl rounded-2xl p-8 w-full max-w-md"
       >
-        <h2 className="text-2xl font-bold mb-4 text-orange-600 text-center">
-          Registro
-        </h2>
+        {/* HEADER */}
+        <div className="text-center mb-6">
+          <div className="text-4xl">🌱</div>
+          <h2 className="text-2xl font-extrabold text-orange-700 mt-2">
+            Crear cuenta
+          </h2>
+          <p className="text-gray-600 text-sm">
+            Empieza tu camino de aprendizaje
+          </p>
+        </div>
 
-        {error && <p className="text-red-500 mb-3">{error}</p>}
+        {/* ERROR */}
+        {error && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-sm text-red-500 mb-3"
+          >
+            {error}
+          </motion.p>
+        )}
 
-        <input
-          type="text"
-          placeholder="Nombre completo"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-          className="w-full border p-2 rounded-lg mb-3"
-        />
+        {/* NOMBRE */}
+        <div className="mb-3">
+          <label className="text-sm font-medium text-orange-700">
+            Nombre completo
+          </label>
+          <input
+            type="text"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            placeholder="Tu nombre"
+            className="mt-1 w-full rounded-xl border border-orange-300 px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none"
+          />
+        </div>
 
-        <input
-          type="email"
-          placeholder="Correo electrónico"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full border p-2 rounded-lg mb-3"
-        />
+        {/* EMAIL */}
+        <div className="mb-3">
+          <label className="text-sm font-medium text-orange-700">
+            Correo electrónico
+          </label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="correo@ejemplo.com"
+            className="mt-1 w-full rounded-xl border border-orange-300 px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none"
+          />
+        </div>
 
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full border p-2 rounded-lg mb-4"
-        />
+        {/* PASSWORD */}
+        <div className="mb-4">
+          <label className="text-sm font-medium text-orange-700">
+            Contraseña
+          </label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Mínimo 6 caracteres"
+            className="mt-1 w-full rounded-xl border border-orange-300 px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none"
+          />
+        </div>
 
+        {/* BOTÓN */}
         <button
           type="submit"
-          className="w-full bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700 transition"
+          disabled={loading}
+          className={`w-full py-2 rounded-full font-semibold transition
+            ${loading
+              ? "bg-orange-300 cursor-not-allowed"
+              : "bg-orange-500 hover:bg-orange-600 text-white"
+            }`}
         >
-          Registrarse
+          {loading ? "Creando cuenta..." : "Registrarse"}
         </button>
-      </form>
+
+        {/* FOOTER */}
+        <p className="mt-5 text-center text-sm text-gray-600">
+          ¿Ya tienes cuenta?{" "}
+          <Link
+            to="/login"
+            className="text-orange-600 font-semibold hover:underline"
+          >
+            Inicia sesión
+          </Link>
+        </p>
+      </motion.form>
     </div>
   );
-};
-
-export default Register;
+}

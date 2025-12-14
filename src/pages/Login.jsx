@@ -1,84 +1,135 @@
 import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../firebase"; // tu archivo firebase.js
-import { useNavigate } from "react-router-dom";
+import { auth, db } from "../firebase";
+import { useNavigate, Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
-const Login = () => {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
-      // Iniciar sesión con Firebase Auth
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
 
-      // Obtener datos del usuario desde Firestore
-      const userDoc = await getDoc(doc(db, "usuarios", user.uid));
-      if (!userDoc.exists()) {
-        setError("No se encontró el usuario en la base de datos.");
-        return;
+      const ref = doc(db, "usuarios", user.uid);
+      const snap = await getDoc(ref);
+
+      if (!snap.exists()) {
+        throw new Error("Usuario no encontrado");
       }
 
-      const userData = userDoc.data();
-      console.log("Usuario actual:", userData);
+      const data = snap.data();
 
-      // Guardar en localStorage o contexto global si quieres usarlo en toda la app
-      localStorage.setItem("usuarioActual", JSON.stringify({ uid: user.uid, ...userData }));
+      // 🔀 Redirección por rol
+      if (data.rol === "profesor") {
+        navigate("/crear-curso");
+      } else {
+        navigate("/mis-cursos");
+      }
 
-      // Redirigir a la página principal (o foro)
-      navigate("/foro");
     } catch (err) {
       console.error(err);
-      setError("Email o contraseña incorrectos");
+      setError("Correo o contraseña incorrectos");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-orange-50">
-      <form
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-100 via-orange-50 to-white px-6">
+      
+      <motion.form
         onSubmit={handleLogin}
-        className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white/80 backdrop-blur-lg border border-orange-200 shadow-xl rounded-2xl p-8 w-full max-w-md"
       >
-        <h2 className="text-2xl font-bold mb-6 text-orange-600">Iniciar Sesión</h2>
-        
-        <input
-          type="email"
-          placeholder="Correo electrónico"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 p-2 border rounded focus:ring-2 focus:ring-orange-400"
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-4 p-2 border rounded focus:ring-2 focus:ring-orange-400"
-        />
+        {/* LOGO */}
+        <div className="text-center mb-6">
+          <div className="text-4xl">🌱</div>
+          <h2 className="text-2xl font-extrabold text-orange-700 mt-2">
+            Bienvenida/o
+          </h2>
+          <p className="text-gray-600 text-sm">
+            Inicia sesión para continuar aprendiendo
+          </p>
+        </div>
 
+        {/* EMAIL */}
+        <div className="mb-4">
+          <label className="text-sm font-medium text-orange-700">
+            Correo electrónico
+          </label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="ejemplo@correo.com"
+            required
+            className="mt-1 w-full rounded-xl border border-orange-300 px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none"
+          />
+        </div>
+
+        {/* PASSWORD */}
+        <div className="mb-4">
+          <label className="text-sm font-medium text-orange-700">
+            Contraseña
+          </label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            required
+            className="mt-1 w-full rounded-xl border border-orange-300 px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none"
+          />
+        </div>
+
+        {/* ERROR */}
+        {error && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-sm text-red-500 mb-3"
+          >
+            {error}
+          </motion.p>
+        )}
+
+        {/* BOTÓN */}
         <button
           type="submit"
-          className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-lg transition"
+          disabled={loading}
+          className={`w-full py-2 rounded-full font-semibold transition
+            ${loading
+              ? "bg-orange-300 cursor-not-allowed"
+              : "bg-orange-500 hover:bg-orange-600 text-white"
+            }`}
         >
-          Iniciar Sesión
+          {loading ? "Ingresando..." : "Iniciar sesión"}
         </button>
 
-        {error && <p className="text-red-500 mt-4">{error}</p>}
-
-        <p className="mt-4 text-sm text-gray-600">
+        {/* FOOTER */}
+        <p className="mt-5 text-center text-sm text-gray-600">
           ¿No tienes cuenta?{" "}
-          <a href="/register" className="text-orange-600 hover:underline">Regístrate aquí</a>
+          <Link
+            to="/register"
+            className="text-orange-600 font-semibold hover:underline"
+          >
+            Regístrate aquí
+          </Link>
         </p>
-      </form>
+      </motion.form>
     </div>
   );
-};
-
-export default Login;
+}

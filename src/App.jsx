@@ -13,6 +13,7 @@ import Testimonios from "./pages/Testimonios";
 import Contactanos from "./pages/Contactanos";
 import Promociones from "./pages/Promociones";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 // páginas protegidas
 import CrearCurso from "./pages/CrearCurso";
@@ -34,6 +35,8 @@ function App() {
           <Route path="/contactanos" element={<Contactanos />} />
           <Route path="/promociones" element={<Promociones />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
 
           {/* 🔐 SOLO ESTUDIANTE */}
           <Route

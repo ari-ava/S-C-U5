@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { motion } from "framer-motion";
@@ -40,28 +40,41 @@ export default function Layout({ children }) {
     setUsuario(null);
   };
 
+  /* ================= NAV LINKS ================= */
   const navLinks = [
     { to: "/", label: "Inicio" },
     { to: "/nosotras", label: "Nosotras" },
     { to: "/mision-vision", label: "Misión y Visión" },
-    { to: "/testimonios", label: "Testimonios" },
     { to: "/foro", label: "Foro" },
     { to: "/catalogo", label: "Catálogo" },
-    { to: "/contactanos", label: "Contáctanos" },
-  ];
+
+    // 🧭 Solo invitados
+    !usuario && { to: "/contactanos", label: "Contáctanos" },
+
+    // 🎓 Solo estudiante
+    usuario?.rol === "estudiante" && {
+      to: "/mis-cursos",
+      label: "Mis cursos",
+    },
+
+    // 👩‍🏫 Solo profesor
+    usuario?.rol === "profesor" && {
+      to: "/crear-curso",
+      label: "Crear curso",
+    },
+  ].filter(Boolean);
 
   return (
     <div className="min-h-screen flex flex-col bg-orange-50">
 
       {/* ================= HEADER ================= */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-orange-200">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
 
-          {/* 🌱 LOGO (SIEMPRE VISIBLE) */}
+          {/* 🌱 LOGO */}
           <Link
             to="/"
-            className={`flex items-center gap-2 font-extrabold tracking-tight text-orange-700 transition-all
-              ${usuario ? "text-xl" : "text-2xl"}`}
+            className="flex items-center gap-2 font-extrabold tracking-tight text-orange-700 text-xl sm:text-2xl"
           >
             🌱
             <span className="hidden sm:inline">
@@ -69,13 +82,13 @@ export default function Layout({ children }) {
             </span>
           </Link>
 
-          {/* NAV DESKTOP */}
-          <nav className="hidden md:flex gap-7 text-sm font-medium">
+          {/* 🧭 NAV DESKTOP */}
+          <nav className="hidden md:flex flex-wrap gap-6 text-sm font-medium">
             {navLinks.map((l) => (
               <Link
                 key={l.to}
                 to={l.to}
-                className={`transition relative
+                className={`relative transition
                   ${
                     location.pathname === l.to
                       ? "text-orange-600 font-semibold"
@@ -90,18 +103,18 @@ export default function Layout({ children }) {
             ))}
           </nav>
 
-          {/* PERFIL / LOGIN */}
+          {/* 👤 PERFIL / LOGIN */}
           {!usuario ? (
             <Link
               to="/login"
-              className="hidden md:block bg-orange-500 text-white px-4 py-2 rounded-full shadow hover:bg-orange-600 transition"
+              className="hidden md:block bg-orange-500 text-white px-4 py-2 rounded-full shadow hover:bg-orange-600 transition whitespace-nowrap"
             >
               Iniciar sesión
             </Link>
           ) : (
-            <div className="hidden md:flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-3 whitespace-nowrap">
               <div className="text-right leading-tight">
-                <p className="text-orange-700 font-semibold">
+                <p className="text-orange-700 font-semibold text-sm">
                   {usuario.nombre}
                 </p>
                 <p className="text-xs text-orange-400 capitalize">
@@ -112,7 +125,7 @@ export default function Layout({ children }) {
               <img
                 src="/assets/img/avatar.png"
                 alt="Avatar"
-                className="h-10 w-10 rounded-full border-2 border-orange-300"
+                className="h-9 w-9 rounded-full border-2 border-orange-300"
               />
 
               <button
@@ -124,7 +137,7 @@ export default function Layout({ children }) {
             </div>
           )}
 
-          {/* BOTÓN MOBILE */}
+          {/* 📱 BOTÓN MOBILE */}
           <button
             className="md:hidden text-orange-700"
             onClick={() => setOpen(!open)}
@@ -133,7 +146,7 @@ export default function Layout({ children }) {
           </button>
         </div>
 
-        {/* ===== MOBILE MENU ===== */}
+        {/* ================= MOBILE MENU ================= */}
         {open && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
