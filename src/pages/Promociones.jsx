@@ -1,6 +1,8 @@
 import { useState } from "react";
+import PromoCarousel from "../Components/PromoCarousel";
 
 export default function Promociones() {
+  <PromoCarousel />;
   const [promos] = useState([
     {
       id: 1,
@@ -21,7 +23,6 @@ export default function Promociones() {
       badge: "EXCLUSIVO",
     },
   ]);
-
   return (
     <div>
       <h1 className="text-3xl font-bold text-orange-700 mb-6">
