@@ -79,9 +79,9 @@ const MisionVision = () => {
 
           <ul className="space-y-4">
             {[
-              "🌱 2023 - Inicio de nuestro proyecto educativo",
-              "📚 2024 - Primera comunidad de estudiantes activos",
-              "💻 2025 - Plataforma digital interactiva"
+              "🌱 U3 - Inicio de nuestro proyecto educativo",
+              "📚 U4 - Registro de estudiantes y profesores",
+              "💻 U5 - Plataforma digital interactiva"
             ].map((item, index) => (
               <motion.li
                 key={index}

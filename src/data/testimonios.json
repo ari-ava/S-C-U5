@@ -3,7 +3,7 @@
     "id": 1,
     "nombre": "Ana López",
     "texto": "El servicio fue excelente, muy rápido y confiable. Definitivamente volvería a contratar.",
-    "imagen": "/ana.jpg",
+    "imagen": "/assets/img/ana.png",
     "rating": 5,
     "tipo": "Profesores"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "nombre": "Carlos Pérez",
     "texto": "La atención fue muy buena y resolvieron todas mis dudas. Muy recomendados.",
-    "imagen": "/carlos.jpg",
+    "imagen": "/assets/img/carlos.jpg",
     "rating": 4,
     "tipo": "Estudiantes"
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "nombre": "Lucía Gómez",
     "texto": "Me sentí acompañada en todo el proceso. Excelente experiencia.",
-    "imagen": "/lucia.jpg",
+    "imagen": "/assets/img/lucia.jpg",
     "rating": 5,
     "tipo": "Estudiantes"
   }
