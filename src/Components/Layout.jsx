@@ -10,8 +10,8 @@ export default function Layout({ children }) {
   const [open, setOpen] = useState(false);
   const [usuario, setUsuario] = useState(null);
   const location = useLocation();
+  
 
-  // 🔐 Detectar usuario logueado
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -40,13 +40,13 @@ export default function Layout({ children }) {
     setUsuario(null);
   };
 
-  /* ================= NAV LINKS ================= */
   const navLinks = [
     { to: "/", label: "Inicio" },
     { to: "/nosotras", label: "Nosotras" },
     { to: "/mision-vision", label: "Misión y Visión" },
     { to: "/foro", label: "Foro" },
     { to: "/catalogo", label: "Catálogo" },
+    { to: "/testimonios", label: "Testimonios" },
 
     // 🧭 Solo invitados
     !usuario && { to: "/contactanos", label: "Contáctanos" },
