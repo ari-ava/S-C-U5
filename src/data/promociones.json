@@ -3,7 +3,7 @@
     "id": "promo-navidad",
     "titulo": "Invita a 5 amigos",
     "descripcion": "Gana cupones especiales para Navidad",
-    "imagen": "/promos/promo-navidad.png",
+    "imagen": "/assets/img/promo-navidad.png",
     "cta": "Invitar ahora",
     "activo": true
   },
@@ -11,7 +11,7 @@
     "id": "promo-30",
     "titulo": "30% de descuento",
     "descripcion": "En toda la tienda por tiempo limitado",
-    "imagen": "/promos/promo-30.png",
+    "imagen": "/assets/img/promo-30.png",
     "cta": "Ver tienda",
     "activo": true
   },
@@ -19,7 +19,7 @@
     "id": "promo-3x2",
     "titulo": "Compra 3 productos",
     "descripcion": "Llévate 3x2 en libros de la misma área",
-    "imagen": "/promos/promo-3x2.png",
+    "imagen": "/assets/img/promo-3x2.png",
     "cta": "Aprovechar oferta",
     "activo": true
   },
@@ -27,7 +27,7 @@
     "id": "promo-ciencias",
     "titulo": "25% de descuento",
     "descripcion": "En cursos del área de ciencias",
-    "imagen": "/promos/promo-pack.png",
+    "imagen": "/assets/img/promo-pack.png",
     "cta": "Ver cursos",
     "activo": true
   }
