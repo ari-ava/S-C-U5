@@ -2,11 +2,8 @@ import React, { useCallback } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
-/* =====================
-   🎉 Confeti optimizado
-===================== */
 function lanzarConfeti() {
-  // Evita crear múltiples canvas si se hace spam al botón
+  
   if (document.getElementById("confetti-canvas")) return;
 
   const colors = ["#FFB27A", "#FF8A65", "#FFD7C2", "#FFEED8", "#FFB3A7"];
