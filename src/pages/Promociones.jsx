@@ -26,7 +26,6 @@ export default function Promociones() {
     const interval = setInterval(() => {
       if (!isHovering.current) {
         carousel.scrollLeft += 1;
-
         if (
           carousel.scrollLeft + carousel.clientWidth >=
           carousel.scrollWidth
@@ -34,7 +33,7 @@ export default function Promociones() {
           carousel.scrollLeft = 0;
         }
       }
-    }, 20); // velocidad suave
+    }, 20);
 
     return () => clearInterval(interval);
   }, []);
@@ -52,6 +51,7 @@ export default function Promociones() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-orange-100/50 to-white px-6 py-16">
+
       {/* ===== HERO ===== */}
       <motion.section
         initial={{ opacity: 0, y: 40 }}
@@ -64,7 +64,7 @@ export default function Promociones() {
         </h1>
 
         <p className="text-lg text-gray-700 mb-10">
-          Aprovecha nuestras ofertas pensadas para acompañarte en tu aprendizaje.
+          Aprende, crece y avanza acompañado en cada paso.
         </p>
 
         <motion.button
@@ -87,7 +87,46 @@ export default function Promociones() {
         )}
       </motion.section>
 
-      {/* ===== CARRUSEL ===== */}
+      {/* ===== PROPUESTA DE VALOR ===== */}
+      <section className="max-w-6xl mx-auto mb-28">
+        <h2 className="text-3xl font-bold text-orange-700 text-center mb-14">
+          ¿Qué encontrarás aquí? 🧡
+        </h2>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            {
+              icon: "💬",
+              title: "Contacto directo",
+              text: "Interacción real con profesores a través del foro o contacto directo.",
+            },
+            {
+              icon: "📚",
+              title: "Cursos accesibles",
+              text: "Cursos gratuitos y de pago, pensados para aprender sin presión.",
+            },
+            {
+              icon: "🎓",
+              title: "Certificados personalizados",
+              text: "Reconocemos tu esfuerzo con certificados con tu nombre.",
+            },
+          ].map((item, i) => (
+            <motion.div
+              key={i}
+              whileHover={{ y: -8 }}
+              className="bg-white rounded-3xl p-6 shadow-md border border-orange-100 text-center"
+            >
+              <div className="text-4xl mb-4">{item.icon}</div>
+              <h3 className="text-xl font-semibold text-orange-700 mb-2">
+                {item.title}
+              </h3>
+              <p className="text-gray-600">{item.text}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== CARRUSEL DE PROMOCIONES ===== */}
       <section
         ref={carouselRef}
         onMouseEnter={() => (isHovering.current = true)}
@@ -102,23 +141,20 @@ export default function Promociones() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.08 }}
-              className="min-w-[280px] max-w-[280px] bg-white rounded-3xl shadow-md border border-orange-100 overflow-hidden"
+              className="min-w-[280px] bg-white rounded-3xl shadow-md border border-orange-100 overflow-hidden"
             >
-              {/* Imagen */}
-              <div className="h-40 w-full overflow-hidden">
+              <div className="h-40">
                 <img
                   src={promo.imagen}
                   alt={promo.titulo}
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                  className="w-full h-full object-cover"
                 />
               </div>
 
-              {/* Contenido */}
               <div className="p-5">
-                <h3 className="text-lg font-bold text-orange-700 mb-1">
+                <h3 className="text-lg font-bold text-orange-700">
                   {promo.titulo}
                 </h3>
-
                 <p className="text-sm text-gray-600 mb-4">
                   {promo.descripcion}
                 </p>
@@ -127,7 +163,7 @@ export default function Promociones() {
                   whileHover={{ scale: 1.06 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleCTA}
-                  className="w-full bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold py-2 rounded-xl shadow"
+                  className="w-full bg-orange-500 text-white py-2 rounded-xl font-semibold"
                 >
                   {promo.cta}
                 </motion.button>
@@ -137,21 +173,49 @@ export default function Promociones() {
         </div>
       </section>
 
-    {/* ===== CTA FINAL ===== */}
+      {/* ===== TESTIMONIOS ===== */}
+      <section className="max-w-5xl mx-auto mb-28 text-center">
+        <h2 className="text-3xl font-bold text-orange-700 mb-14">
+          Lo que dicen nuestros estudiantes ✨
+        </h2>
+
+        <div className="grid md:grid-cols-2 gap-8">
+          {[
+            "Me sentí acompañada en todo momento 💬",
+            "Los cursos gratuitos me ayudaron mucho 🌱",
+            "Recibir mi certificado fue muy especial 🎓",
+            "Aquí aprender se siente humano 🧡",
+          ].map((text, i) => (
+            <motion.div
+              key={i}
+              whileHover={{ scale: 1.04 }}
+              className="bg-orange-100/70 rounded-3xl p-6 shadow"
+            >
+              <p className="italic text-gray-700">“{text}”</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== INVITACIÓN FINAL ===== */}
       <motion.section
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        className="max-w-4xl mx-auto mt-32 text-center bg-orange-100/70 rounded-3xl p-12"
+        className="max-w-4xl mx-auto text-center bg-orange-100/70 rounded-3xl p-12"
       >
         <h2 className="text-3xl font-bold text-orange-700 mb-4">
-          Gracias por acompañarnos en este camino educativo! 🧡
+          Gracias por acompañarnos 🧡
         </h2>
-        <p className="text-gray-700 mb-8">
-            Un proyecto hecho con cariño para estudiantes que buscan aprender de manera accesible,
-             cercana y acompañada. Aquí, cada recurso nace desde nuestras experiencias,
-              nuestro esfuerzo y nuestros sueños
+
+        <p className="text-gray-700 mb-8 leading-relaxed">
+          Un proyecto hecho con cariño para estudiantes que buscan aprender de
+          manera accesible, cercana y acompañada.  
+          <br /><br />
+          Cada recurso nace desde nuestras experiencias, nuestro esfuerzo y
+          nuestros sueños.
         </p>
+
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
