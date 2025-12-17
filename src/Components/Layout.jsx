@@ -46,10 +46,10 @@ export default function Layout({ children }) {
     { to: "/mision-vision", label: "Misión y Visión" },
     { to: "/foro", label: "Foro" },
     { to: "/catalogo", label: "Catálogo" },
-    { to: "/testimonios", label: "Testimonios" },
 
     // 🧭 Solo invitados
     !usuario && { to: "/contactanos", label: "Contáctanos" },
+    !usuario && { to: "/testimonios", label: "Testimonios" },
 
     // 🎓 Solo estudiante
     usuario?.rol === "estudiante" && {
